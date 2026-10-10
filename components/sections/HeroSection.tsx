@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from 'react-router-dom';
 
 export function HeroSection() {
   return (
@@ -37,7 +36,11 @@ export function HeroSection() {
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-              <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://wa.me/5511999999999"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <MessageCircle className="h-4 w-4" /> Falar no WhatsApp
               </a>
             </Button>
