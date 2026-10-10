@@ -1,11 +1,10 @@
 "use client";
 import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, UserCog } from "lucide-react";
 import { useCartStore } from "@/lib/zustand/useCartStore";
 import { MobileMenu } from "./MobileMenu";
 import { ThemeToggle } from "@/components/providers/ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 const NAV = [
   { label: "Por que Ouro?", href: "#porque" },
@@ -13,6 +12,7 @@ const NAV = [
   { label: "Modelos", href: "#produtos" },
   { label: "FAQ", href: "#faq" },
   { label: "Contato", href: "#contato" },
+  { label: "Painel Admin", href: "/login" },
 ];
 
 export function Header() {
@@ -63,6 +63,19 @@ export function Header() {
                 {count > 99 ? "99+" : count}
               </span>
             )}
+          </Button>
+
+          {/* Botão de acesso ao painel admin */}
+          <Button
+            asChild
+            variant="ghost"
+            size="icon"
+            className="hidden h-11 w-11 sm:inline-flex"
+            aria-label="Painel administrativo"
+          >
+            <Link href="/login" title="Painel administrativo">
+              <UserCog className="h-5 w-5" />
+            </Link>
           </Button>
 
           {/* Menu mobile */}
