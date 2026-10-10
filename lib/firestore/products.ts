@@ -17,13 +17,23 @@ import type { Product } from "@/types";
 const COL = "products";
 
 export async function listActiveProducts(): Promise<Product[]> {
+  // Sem orderBy — evita exigir índice composto no Firestore
   const q = query(
     collection(db, COL),
-    where("active", "==", true),
-    orderBy("createdAt", "desc")
+    where("active", "==", true)
   );
   const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Product, "id">) }));
+  const products = snap.docs.map((d) => ({
+    id: d.id,
+    ...(d.data() as Omit<Product, "id">),
+  }));
+
+  // Ordena no cliente: mais recentes primeiro
+  return products.sort((a, b) => {
+    const aT = (a as any).createdAt?.seconds ?? 0;
+    const bT = (b as any).createdAt?.seconds ?? 0;
+    return bT - aT;
+  });
 }
 
 export async function listAllProducts(): Promise<Product[]> {
