@@ -12,7 +12,7 @@ const NAV = [
   { label: "Modelos", href: "#produtos" },
   { label: "FAQ", href: "#faq" },
   { label: "Contato", href: "#contato" },
-  { label: "Painel Admin", href: "/login" },
+  { label: "Login", href: "/login" },
 ];
 
 export function Header() {
