@@ -1,0 +1,43 @@
+{
+  "name": "Ouro Bonés — Bonés Personalizados no Atacado",
+  "short_name": "Ouro Bonés",
+  "description": "Bonés personalizados de altíssima qualidade. Atacado a partir de 30 unidades.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#010101",
+  "theme_color": "#DDAF06",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["shopping", "business"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ver Modelos",
+      "short_name": "Modelos",
+      "description": "Explorar o catálogo de bonés",
+      "url": "/#produtos",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Falar no WhatsApp",
+      "short_name": "WhatsApp",
+      "description": "Contato direto com a equipe",
+      "url": "https://wa.me/5511999999999",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}
