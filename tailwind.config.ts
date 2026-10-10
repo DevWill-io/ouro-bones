@@ -2,7 +2,11 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   darkMode: ["class"],
-  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: [
+    "./app/**/*.{ts,tsx}",           // 👈 ESSENCIAL
+    "./components/**/*.{ts,tsx}",    // 👈 ESSENCIAL
+    "./lib/**/*.{ts,tsx}",           // opcional mas recomendado
+  ],
   theme: {
     container: {
       center: true,
@@ -11,7 +15,6 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // Tokens semânticos (mapeados em CSS vars)
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card:       { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
@@ -39,4 +42,5 @@ const config: Config = {
   },
   plugins: [require("tailwindcss-animate")],
 };
+
 export default config;
