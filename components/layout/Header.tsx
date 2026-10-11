@@ -1,7 +1,10 @@
 "use client";
 import Link from "next/link";
-import { ShoppingCart, UserCog } from "lucide-react";
+import { ShoppingCart, UserCog, LogIn, LogOut, LayoutDashboard } from "lucide-react";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import { useCartStore } from "@/lib/zustand/useCartStore";
+import { useAuthContext } from "@/components/providers/AuthProvider";
 import { MobileMenu } from "./MobileMenu";
 import { ThemeToggle } from "@/components/providers/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -12,13 +15,18 @@ const NAV = [
   { label: "Modelos", href: "#produtos" },
   { label: "FAQ", href: "#faq" },
   { label: "Contato", href: "#contato" },
-  { label: "Login", href: "/login" },
 ];
 
 export function Header() {
   const open = useCartStore((s) => s.open);
   const items = useCartStore((s) => s.items);
   const count = items.reduce((a, i) => a + i.quantity, 0);
+  const { user, isAdmin, loading } = useAuthContext();
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    window.location.href = "/";
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -65,21 +73,60 @@ export function Header() {
             )}
           </Button>
 
-          {/* Botão de acesso ao painel admin */}
-          <Button
-            asChild
-            variant="ghost"
-            size="icon"
-            className="hidden h-11 w-11 sm:inline-flex"
-            aria-label="Painel administrativo"
-          >
-            <Link href="/login" title="Painel administrativo">
-              <UserCog className="h-5 w-5" />
-            </Link>
-          </Button>
+          {/* Botão de usuário dinâmico */}
+          {loading ? (
+            <div className="h-11 w-11" />
+          ) : user ? (
+            <div className="flex items-center gap-1">
+              {isAdmin && (
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="icon"
+                  className="hidden h-11 w-11 sm:inline-flex"
+                  aria-label="Painel administrativo"
+                >
+                  <Link href="/dashboard" title="Painel administrativo">
+                    <LayoutDashboard className="h-5 w-5" />
+                  </Link>
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hidden h-11 w-11 sm:inline-flex"
+                aria-label="Sair da conta"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-5 w-5" />
+              </Button>
+            </div>
+          ) : (
+            <Button
+              asChild
+              variant="ghost"
+              size="icon"
+              className="hidden h-11 w-11 sm:inline-flex"
+              aria-label="Entrar"
+            >
+              <Link href="/login" title="Entrar">
+                <LogIn className="h-5 w-5" />
+              </Link>
+            </Button>
+          )}
 
           {/* Menu mobile */}
-          <MobileMenu nav={NAV} />
+          <MobileMenu
+            nav={[
+              ...NAV,
+              ...(user
+                ? [
+                    ...(isAdmin ? [{ label: "Painel Admin", href: "/dashboard" }] : []),
+                    { label: "Sair", href: "#logout" },
+                  ]
+                : [{ label: "Entrar", href: "/login" }]),
+            ]}
+          />
         </div>
       </div>
     </header>
