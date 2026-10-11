@@ -1,6 +1,11 @@
 "use client";
 import Link from "next/link";
-import { ShoppingCart, UserCog, LogIn, LogOut, LayoutDashboard } from "lucide-react";
+import {
+  ShoppingCart,
+  LogIn,
+  LogOut,
+  LayoutDashboard,
+} from "lucide-react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useCartStore } from "@/lib/zustand/useCartStore";
@@ -24,8 +29,14 @@ export function Header() {
   const { user, isAdmin, loading } = useAuthContext();
 
   const handleLogout = async () => {
-    await signOut(auth);
-    window.location.href = "/";
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error("Erro ao sair:", err);
+    } finally {
+      // Força recarregar a página e limpar estado em memória
+      window.location.replace("/");
+    }
   };
 
   return (
@@ -85,17 +96,20 @@ export function Header() {
                   size="icon"
                   className="hidden h-11 w-11 sm:inline-flex"
                   aria-label="Painel administrativo"
+                  title="Painel administrativo"
                 >
-                  <Link href="/dashboard" title="Painel administrativo">
+                  <Link href="/dashboard">
                     <LayoutDashboard className="h-5 w-5" />
                   </Link>
                 </Button>
               )}
+
               <Button
                 variant="ghost"
                 size="icon"
-                className="hidden h-11 w-11 sm:inline-flex"
+                className="h-11 w-11"
                 aria-label="Sair da conta"
+                title="Sair"
                 onClick={handleLogout}
               >
                 <LogOut className="h-5 w-5" />
@@ -106,16 +120,17 @@ export function Header() {
               asChild
               variant="ghost"
               size="icon"
-              className="hidden h-11 w-11 sm:inline-flex"
+              className="h-11 w-11"
               aria-label="Entrar"
+              title="Entrar"
             >
-              <Link href="/login" title="Entrar">
+              <Link href="/login">
                 <LogIn className="h-5 w-5" />
               </Link>
             </Button>
           )}
 
-          {/* Menu mobile */}
+          {/* Menu mobile (recebe onLogout para tratar o item "Sair") */}
           <MobileMenu
             nav={[
               ...NAV,
@@ -126,6 +141,7 @@ export function Header() {
                   ]
                 : [{ label: "Entrar", href: "/login" }]),
             ]}
+            onLogout={handleLogout}
           />
         </div>
       </div>
