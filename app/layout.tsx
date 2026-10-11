@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import { CartProvider } from "@/components/providers/CartProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { PWARegister } from "@/components/PWARegister";
@@ -92,11 +93,12 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning className={inter.variable}>
       <body className="min-h-dvh bg-background font-sans text-foreground antialiased no-x-scroll">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <CartProvider>{children}</CartProvider>
+          <AuthProvider>
+            <CartProvider>{children}</CartProvider>
+          </AuthProvider>
           <Toaster />
         </ThemeProvider>
 
-        {/* Registra o Service Worker (só em produção) */}
         <PWARegister />
       </body>
     </html>
