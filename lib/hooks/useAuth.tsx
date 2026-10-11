@@ -1,26 +1,56 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth } from "@/lib/firebase";
-
-const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? "")
-  .split(",")
-  .map((e) => e.trim().toLowerCase())
-  .filter(Boolean);
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingUser, setLoadingUser] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loadingAdmin, setLoadingAdmin] = useState(true);
 
+  // 1) Ouve mudanças de autenticação
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u);
-      setLoading(false);
+      setLoadingUser(false);
     });
     return () => unsub();
   }, []);
 
-  const isAdmin = !!user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+  // 2) Quando o usuário muda, verifica se ele é admin
+  useEffect(() => {
+    let cancelled = false;
 
-  return { user, loading, isAdmin };
+    if (!user) {
+      setIsAdmin(false);
+      setLoadingAdmin(false);
+      return;
+    }
+
+    setLoadingAdmin(true);
+    getDoc(doc(db, "admins", user.uid))
+      .then((snap) => {
+        if (!cancelled) setIsAdmin(snap.exists());
+      })
+      .catch((err) => {
+        console.error("Erro ao checar admin:", err);
+        if (!cancelled) setIsAdmin(false);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingAdmin(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  return {
+    user,
+    isAdmin,
+    loading: loadingUser || loadingAdmin,
+  };
 }
