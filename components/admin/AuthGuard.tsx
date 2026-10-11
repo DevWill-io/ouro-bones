@@ -1,32 +1,25 @@
-
 "use client";
-
 import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/lib/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/components/providers/AuthProvider";
 import { Loader2 } from "lucide-react";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading, isAdmin } = useAuthContext();
   const router = useRouter();
-  const pathname = usePathname();
-
-  const isLoginPage = pathname === "/login";
 
   useEffect(() => {
-    // Só redireciona se NÃO estiver carregando, NÃO tiver usuário E não estiver na página de login
-    if (!loading && !user && !isLoginPage) {
+    if (loading) return;
+    if (!user) {
       router.replace("/login");
+      return;
     }
-  }, [user, loading, router, isLoginPage]);
+    if (!isAdmin) {
+      router.replace("/");
+    }
+  }, [user, loading, isAdmin, router]);
 
-  // Se estamos na página de login, deixa renderizar normalmente (sem spinner)
-  if (isLoginPage) {
-    return <>{children}</>;
-  }
-
-  // Enquanto verifica autenticação, mostra spinner
-  if (loading || !user) {
+  if (loading || !user || !isAdmin) {
     return (
       <div className="grid min-h-screen place-items-center">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
