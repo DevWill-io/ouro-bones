@@ -1,0 +1,13 @@
+{
+  "name": "Ouro Bonés",
+  "short_name": "Ouro Bonés",
+  "description": "Bonés personalizados no atacado.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#DDAF06",
+  "icons": [
+    { "src": "/images/logo/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/images/logo/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
