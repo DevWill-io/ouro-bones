@@ -39,7 +39,9 @@ export default function DepoimentosPage() {
                       />
                     ))}
                   </div>
-                  <p className="text-sm">"{t.content}"</p>
+                  <p className="text-sm">
+                    &ldquo;{t.content}&rdquo;
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     <strong className="text-foreground">{t.name}</strong>
                     {t.company ? ` • ${t.company}` : ''}

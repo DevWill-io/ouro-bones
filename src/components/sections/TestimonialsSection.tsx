@@ -42,7 +42,9 @@ export function TestimonialsSection() {
                         />
                       ))}
                     </div>
-                    <p className="text-sm text-pretty">"{t.content}"</p>
+                    <p className="text-sm text-pretty">
+                      &ldquo;{t.content}&rdquo;
+                    </p>
                     <div className="text-xs text-muted-foreground">
                       <p className="font-semibold text-foreground">{t.name}</p>
                       {t.role && t.company && <p>{t.role} • {t.company}</p>}
